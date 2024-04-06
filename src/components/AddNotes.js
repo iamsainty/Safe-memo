@@ -8,7 +8,6 @@ const AddNotes = () => {
     const [note, setNote]=useState({title: "", description: "", tag: ""})
 
     const addnotebtn=(e)=>{
-        e.preventDefault();
         addnote(note.title, note.description, note.tag);
     }
     const change=(e)=>{
@@ -24,9 +23,13 @@ const AddNotes = () => {
         </div>
         <div className="mb-3">
           <label htmlFor="description" className="form-label">Description</label>
-          <input type="textarea" className="form-control" id="description" name="description" onChange={change} />
+          <input type="text" className="form-control" id="description" name="description" onChange={change} />
         </div>
-        <button type="submit" className="btn btn-primary" onClick={addnotebtn}>Submit</button>
+        <div className="mb-3">
+          <label htmlFor="tag" className="form-label">Tag</label>
+          <input type="text" className="form-control" id="tag" name="tag" onChange={change} />
+        </div>
+        <button type="submit" className="btn btn-primary" onClick={addnotebtn}>Add Note</button>
       </form>
     </div>
   )
