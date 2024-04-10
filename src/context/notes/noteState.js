@@ -40,17 +40,17 @@ const NoteState = (props) => {
             },
             body: JSON.stringify({ title, description, tag }),
         });
-        console.log(response)
-
-        const note = {
-            "_id": "660429c76e78b7566ce1fd82",
-            "user": "66039aff98e6a2138d8be251",
-            "title": title,
-            "description": description,
-            "tag": tag,
-            "date": "2024-03-27T14:14:31.253Z",
-            "__v": 0
-        };
+        const json= await response.json();
+        const note=json;
+        // const note = {
+        //     "_id": "660429c76e78b7566ce1fd82",
+        //     "user": "66039aff98e6a2138d8be251",
+        //     "title": title,
+        //     "description": description,
+        //     "tag": tag,
+        //     "date": "2024-03-27T14:14:31.253Z",
+        //     "__v": 0
+        // };
         setNotes(notes.concat(note))
     }
 

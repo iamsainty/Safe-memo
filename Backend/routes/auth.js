@@ -15,14 +15,15 @@ router.post('/createuser',[
     body('email', 'Enter a valid email').isEmail(),
     body('password', 'Enter a valid password').isLength({min: 5}), 
 ],async (req, res)=>{
+    let success=false;
     const errors=validationResult(req);
     if(!errors.isEmpty()){
-        return res.status(400).json({errors: errors.array()})
+        return res.status(400).json({success, errors: errors.array()})
     }
     try {
         let user= await User.findOne({email: req.body.email});
         if(user){
-            return res.status(400).json({ error: "E-mail already exists" })
+            return res.status(400).json({ success, error: "E-mail already exists" })
         }
 
         const salt=await bcrypt.genSalt(10);
@@ -41,7 +42,8 @@ router.post('/createuser',[
 
         const authtoken=jwt.sign(data, JWT_SECRET)
         console.log(authtoken)
-        res.json({authtoken})
+        success=true;
+        res.json({success, authtoken})
     } catch (error) {
         console.error(error.message);
         res.status(500).send("Some Error occured");
@@ -54,6 +56,7 @@ router.post('/login',[
     body('email', 'Enter a valid email').isEmail(),
     body('password', 'Enter a valid password').isLength({min: 5}), 
 ],async (req, res)=>{
+    let success=false;
     const errors=validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()})
@@ -64,12 +67,12 @@ router.post('/login',[
     try {
         let user=await User.findOne({email});
         if(!user){
-            return res.status(400).json({error: "Email does not exist"})
+            return res.status(400).json({success, error: "Email does not exist"})
         }
 
         const checkpass=await bcrypt.compare(password, user.password);
         if(!checkpass){
-            return res.status(400).json({error: "Password did not matched"})
+            return res.status(400).json({success, error: "Password did not matched"})
         }
 
 
@@ -80,7 +83,8 @@ router.post('/login',[
         }
 
         const authtoken=jwt.sign(data, JWT_SECRET)
-        res.send({authtoken})
+        success=true;
+        res.send({success, authtoken})
     } catch (error) {
         console.error(error.message);
         res.status(500).send("Some Error occured");
