@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
-const Register = (props) => {
+const Register = () => {
     const [credentials, setCredentials] = useState({ name: "", email: "", password: "", cnfpassword: "" });
     let navigate = useNavigate()
     const handlesubmit = async (e) => {
@@ -19,10 +19,6 @@ const Register = (props) => {
         if (json.success) {
             localStorage.setItem('token', json.authtoken);
             navigate('/');
-            props.showalert("Account created successfully", "success");
-        }
-        else {
-            props.showalert("Invalid  Credentials", "danger");
         }
     }
     const change = (e) => {

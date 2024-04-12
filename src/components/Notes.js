@@ -30,7 +30,6 @@ const Notes = (props) => {
         addnote(note.title, note.description, note.tag);
         editnote(note.id, note.edittitle, note.editdescription, note.edittag)
         refclose.current.click();
-        props.showalert("Note updated succesfully", "success")
     }
     const change = (e) => {
         setNote({ ...note, [e.target.name]: e.target.value })
@@ -39,7 +38,7 @@ const Notes = (props) => {
         <>
             <div className="container" style={{marginTop: '15vh'}}>
                 <div className="card p-4 rounded-circle-border shadow-lg" style={{}}>
-                    <AddNotes showalert={props.showalert} />
+                    <AddNotes/>
                     <button ref={ref} type="button" style={{ display: 'none' }} className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         Launch demo modal
                     </button>
@@ -73,9 +72,9 @@ const Notes = (props) => {
                 </div>
                 <div className='row'>
                     <h1 style={{color: 'white', fontWeight: 'bolder', marginTop: '5vh', marginBottom: '2vh'}}>Your notes</h1>
-                    {(notes.length === 0) ? <p>No notes yet! Add one now.</p> : null}
+                    {(notes.length === 0) ? <p style={{color: 'white'}}>No notes yet! Add one now.</p> : null}
                     {notes && notes.map((note) => {
-                        return <Noteitem key={note._id} showalert={props.showalert} updateNote={updateNote} note={note} />
+                        return <Noteitem key={note._id} updateNote={updateNote} note={note} />
                     })}
                 </div>
 
