@@ -1,8 +1,11 @@
+require('dotenv').config();
+
 const mongoose = require('mongoose');
-const mongoURI = 'mongodb://localhost:27017/notevault';
+const mongoURI = process.env.mongodbURI;
 
 const connectToMongo = () => {
-    mongoose.connect(mongoURI)
+    console.log("Connecting to MongoDB...");
+    mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }) 
         .then(() => {
             console.log("Connection successful");
         })

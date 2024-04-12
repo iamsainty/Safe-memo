@@ -20,7 +20,7 @@ const Register = () => {
             return;
         }
 
-        const response = await fetch("http://localhost:5001/api/auth/createuser", {
+        const response = await fetch("https://secretscript.web.app/api/auth/createuser", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

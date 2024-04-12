@@ -3,7 +3,7 @@ import { useState } from "react";
 import NoteContext from "./noteContext";
 
 const NoteState = (props) => {
-    const host = "http://localhost:5001"
+    const host = "https://secretscript.web.app"
 
 
     const fetchednotes = []
