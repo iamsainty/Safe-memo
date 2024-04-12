@@ -1,4 +1,3 @@
-import './App.css';
 import {
   BrowserRouter as Router,
   Routes,
@@ -26,13 +25,14 @@ function App() {
       setalert(null);
     }, 2000);
   }
+  document.body.style.background = 'linear-gradient(to right, #222222, #111111)';
   return (
     <div className="App">
       <Router>
         <Navbar />
         <Alert alert={alert} />
         <NoteState>
-          <div className="container">
+          <div>
           <Routes>
             <Route exact path="/" element={<Home showalert={showalert} />} />
             <Route exact path="/about" element={<About />} />

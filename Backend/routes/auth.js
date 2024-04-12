@@ -8,8 +8,7 @@ const fetchuser = require('../middleware/fetchuser');
 
 const JWT_SECRET="hellosainty";
 
-
-//creating new user 
+//creating new user
 router.post('/createuser',[
     body('name', 'Enter a valid name').isLength({min: 5}),
     body('email', 'Enter a valid email').isEmail(),

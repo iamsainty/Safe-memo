@@ -10,7 +10,6 @@ const Note = require('../models/Notes');
 //fetching notes
 router.get('/fetchnotes', fetchuser, async (req, res) => {
     try {
-        
         const notes = await Notes.find({ user: req.user.id });
         res.json(notes)
     } catch (error) {
@@ -27,7 +26,6 @@ router.post('/addnote', fetchuser, [
     body('description', "Description can't be empty").isLength({ min: 1 })
 ], async (req, res) => {
     try {
-
         const { title, description, tag } = req.body;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

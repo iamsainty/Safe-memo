@@ -17,21 +17,15 @@ const AddNotes = (props) => {
     }
   return (
     <div>
-      <h1>Add a note</h1>
+      <h1 style={{fontWeight: 'bolder'}}>Add a note</h1><br />
       <form>
         <div className="mb-3">
-          <label htmlFor="title" className="form-label">Title</label>
-          <input type="text" className="form-control" id="title" name="title" value={note.title} onChange={change}/>
+          <input type="text" className="form-control" style={{border: '1px solid black'}}  placeholder='Title' id="title" name="title" value={note.title} onChange={change}/>
         </div>
         <div className="mb-3">
-          <label htmlFor="description" className="form-label">Description</label>
-          <input type="text" className="form-control" id="description" name="description" value={note.description } onChange={change} />
+          <input type="text" className="form-control" style={{border: '1px solid black'}}  id="description" placeholder='Description' name="description" value={note.description } onChange={change} />
         </div>
-        <div className="mb-3">
-          <label htmlFor="tag" className="form-label">Tag</label>
-          <input type="text" className="form-control" id="tag" name="tag" value={note.tag} onChange={change} />
-        </div>
-        <button type="button" className="btn btn-primary" onClick={addnotebtn}>Add Note</button>
+        <button type="button" className="btn btn-outline-dark" style={{width: '25vh'}} onClick={addnotebtn}>Add Note</button>
       </form>
     </div>
   )
