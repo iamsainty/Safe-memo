@@ -5,7 +5,7 @@ const mongoURI = process.env.mongodbURI;
 
 const connectToMongo = () => {
     console.log("Connecting to MongoDB...");
-    mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }) 
+    mongoose.connect(mongoURI) 
         .then(() => {
             console.log("Connection successful");
         })
@@ -15,3 +15,4 @@ const connectToMongo = () => {
 };
 
 module.exports = connectToMongo;
+

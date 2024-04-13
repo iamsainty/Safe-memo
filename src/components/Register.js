@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
     const [credentials, setCredentials] = useState({ name: "", username: "", password: "", cnfpassword: "" });
@@ -45,7 +45,7 @@ const Register = () => {
     return (
         <div>
             <div className="d-flex justify-content-center align-items-center" style={{ background: 'linear-gradient(to right, #222222, #111111)', height: '100vh' }} >
-                <div className="card p-4 rounded-circle-border shadow-lg" style={{ width: "50vh" }}>
+                <div className="card p-4 rounded-circle-border shadow-lg" style={{ marginLeft: '4vh',marginRight: '4vh', width: "45vh" }}>
                     <h2 className="text-center mb-4" style={{ fontSize: '4vh' }}><b>Secure your notes </b></h2>
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
@@ -62,7 +62,7 @@ const Register = () => {
                         </div>
                         <div style={{ color: 'red', paddingBottom: '2vh' }}>{msg}</div>
                         <button type="submit" className="btn btn-outline-dark btn-block" style={{ width: '100%' }}>Register</button>
-                        <p style={{fontSize: '1.75vh', paddingTop: '2.5vh'}}>Remember your password; it's unchangeable</p>
+                        <p style={{ fontSize: '1.75vh', paddingTop: '2.5vh' }}>Have an account ? <Link to='/register'>Login now</Link></p>
                     </form>
                 </div>
             </div>

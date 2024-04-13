@@ -1,17 +1,23 @@
-const connectTomongo = require('./db');
-const express = require('express')
-var cors = require('cors')
-var app = express()
-connectTomongo();
+const connectToMongo = require('./db');
+const express = require('express');
 
-const port = 5001
+const app = express();
+connectToMongo();
 
-app.use(cors())
-app.use(express.json())
+const port = process.env.PORT || 5001; // Use process.env.PORT if available, else default to 5001
+const cors = require('cors');
 
-app.use('/api/auth', require('./routes/auth'))
-app.use('/api/notes', require('./routes/notes'))
+const corsOptions = {
+    origin: 'https://secretscript.web.app',
+};
+
+app.use(cors(corsOptions));
+
+app.use(express.json());
+
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/notes', require('./routes/notes'));
 
 app.listen(port, () => {
-  console.log(`Example app listening on port http://localhost:${port}`)
-})
+  console.log(`Example app listening on port ${port}`);
+});
