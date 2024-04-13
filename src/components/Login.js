@@ -10,7 +10,20 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch("https://secretscript.web.app/api/auth/login", {
+            if(credentials.username===''){
+                setMsg('Enter your username');
+                return;
+            }
+            const pattern=/^[a-z0-9]+$/;
+            if(!pattern.test(credentials.username)){
+                setMsg('Username should contain only lowercase alphabets and numbers');
+                return;
+            }
+            if(credentials.password===''){
+                setMsg('Enter your password');
+                return ;
+            }
+            const response = await fetch("http://localhost:5001/api/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -21,9 +34,10 @@ const Login = () => {
             console.log(json);
             if (response.ok) {
                 localStorage.setItem('token', json.authtoken);
-                navigate('/');
+                navigate('/mynotes');
+                window.location.reload();
             } else {
-                setMsg('Invalid credentials');
+                setMsg(json.error);
             }
         } catch (error) {
             console.error('Error during login:', error);
@@ -37,7 +51,7 @@ const Login = () => {
 
     return (
         <div className="d-flex justify-content-center align-items-center" style={{ background: 'linear-gradient(to right, #222222, #111111)', height: '100vh' }}>
-            <div className="card p-4 rounded-circle-border shadow-lg container" style={{ marginLeft: '4vh',marginRight: '4vh', width: "40vh" }}>
+            <div className="card p-4 rounded-circle-border shadow-lg container" style={{ marginLeft: '4vh',marginRight: '4vh', width: "50vh" }}>
                 <h2 className="text-center mb-4" style={{ fontSize: '4vh' }}><b>Get your notes </b></h2>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">

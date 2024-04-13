@@ -1,115 +1,102 @@
-// import { useState } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NoteContext from "./noteContext";
+import { useNavigate } from "react-router-dom";
 
 const NoteState = (props) => {
-    const host = "https://secretscript.web.app"
+    const host = "http://localhost:5001";
+    const navigate = useNavigate();
 
+    const [notes, setNotes] = useState([]);
 
-    const fetchednotes = []
-
-    const [notes, setNotes] = useState(fetchednotes);
-
-    //fetching all notes
+    const [fetchComplete, setFetchComplete] = useState(false); // Flag to track if fetchnotes has completed
 
     const fetchnotes = async () => {
-        //api call
-
-        const url = `${host}/api/notes/fetchnotes`
-        const response = await fetch(url, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "auth-token": localStorage.getItem("token")  
-            },
-        });
-        const allnotes = await response.json();
-        setNotes(allnotes)
-    }
-
-
-    //adding a note
-    const addnote = async (title, description, tag) => {
-
-        const url = `${host}/api/notes/addnote`
-        const response = await fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "auth-token": localStorage.getItem("token")  
-            },
-            body: JSON.stringify({ title, description, tag }),
-        });
-        const json= await response.json();
-        const note=json;
-        // const note = {
-        //     "_id": "660429c76e78b7566ce1fd82",
-        //     "user": "66039aff98e6a2138d8be251",
-        //     "title": title,
-        //     "description": description,
-        //     "tag": tag,
-        //     "date": "2024-03-27T14:14:31.253Z",
-        //     "__v": 0
-        // };
-        setNotes(notes.concat(note))
-    }
-
-    //deleting a note
-    const deletenote = async(id) => {
-        //api call
-        const url = `${host}/api/notes/deletenote/${id}`
-        const response = await fetch(url, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "auth-token": localStorage.getItem("token")  
-            },
-        });
-        console.log(response)
-
-        const newnotes = notes.filter((fetchnotes) => {
-            return fetchnotes._id !== id
-        })
-        setNotes(newnotes);
-    }
-
-    //edit a note
-    const editnote = async (id, title, description, tag) => {
-        //api call
-
-        const url = `${host}/api/notes/updatenote/${id}`
-        const response = await fetch(url, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "auth-token": localStorage.getItem("token")  
-            },
-            body: JSON.stringify({ title, description, tag }),
-        });
-        console.log(response)
-
-
-
-        //logic for editing the note
-        for (let index = 0; index < fetchednotes.length; index++) {
-            const element = fetchednotes[index];
-            if (element._id === id) {
-                element.title = title;
-                element.description = description;
-                element.tag = tag;
+        if (!localStorage.getItem('token')) {
+            navigate('/login');
+        } else {
+            try {
+                const url = `${host}/api/notes/fetchnotes`;
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "auth-token": localStorage.getItem("token")
+                    },
+                });
+                const allnotes = await response.json();
+                setNotes(allnotes);
+                setFetchComplete(true); // Set fetchComplete to true after fetchnotes completes
+            } catch (error) {
+                console.error("Error fetching notes:", error);
             }
         }
-    }
+    };
 
+    useEffect(() => {
+        if (!fetchComplete) { // Run fetchnotes only if fetchComplete is false
+            fetchnotes();
+        }
+        // eslint-disable-next-line
+    }, [ fetchComplete ]);
 
+    const addnote = async (title, description, tag) => {
+        try {
+            const url = `${host}/api/notes/addnote`;
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "auth-token": localStorage.getItem("token")  
+                },
+                body: JSON.stringify({ title, description, tag }),
+            });
+            const note = await response.json();
+            setNotes([...notes, note]);
+        } catch (error) {
+            console.error("Error adding note:", error);
+        }
+    };
 
-    //   const [notes, setNotes] = useState(fetchednotes)
+    const deletenote = async(id) => {
+        try {
+            const url = `${host}/api/notes/deletenote/${id}`;
+            await fetch(url, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "auth-token": localStorage.getItem("token")  
+                },
+            });
+            setNotes(notes.filter(note => note._id !== id));
+        } catch (error) {
+            console.error("Error deleting note:", error);
+        }
+    };
+
+    const editnote = async (id, title, description, tag) => {
+        try {
+            const url = `${host}/api/notes/updatenote/${id}`;
+            await fetch(url, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "auth-token": localStorage.getItem("token")  
+                },
+                body: JSON.stringify({ title, description, tag }),
+            });
+            setNotes(notes.map(note =>
+                note._id === id ? { ...note, title, description, tag } : note
+            ));
+        } catch (error) {
+            console.error("Error editing note:", error);
+        }
+    };
+
     return (
         <NoteContext.Provider value={{ notes, addnote, deletenote, editnote, fetchnotes }}>
             {props.children}
         </NoteContext.Provider>
-
-    )
-}
+    );
+};
 
 export default NoteState;

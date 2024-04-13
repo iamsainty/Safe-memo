@@ -15,7 +15,7 @@ const Navbar = () => {
             <form className="d-flex" role="search">
               {localStorage.getItem('token') !== null ? (
                 <div>
-                  <Link className="btn btn-outline-light mx-4" to='/' onClick={handlelogout} type="submit"> <i class="fa-solid fa-right-from-bracket"></i></Link>
+                  <Link className="btn btn-outline-light mx-4" to='/' onClick={handlelogout} type="submit">Log out &nbsp; <i className="fa-solid fa-right-from-bracket"></i></Link>
                 </div>
               ) : (
                 <div></div>

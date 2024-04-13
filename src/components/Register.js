@@ -20,7 +20,7 @@ const Register = () => {
             return;
         }
 
-        const response = await fetch("https://secretscript.web.app/api/auth/createuser", {
+        const response = await fetch("http://localhost:5001/api/auth/createuser", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -31,7 +31,7 @@ const Register = () => {
         console.log(json);
         if (json.success) {
             localStorage.setItem('token', json.authtoken);
-            navigate('/');
+            navigate('/mynotes');
             window.location.reload();
         } else {
             setMsg('Username already exists!');
@@ -45,7 +45,7 @@ const Register = () => {
     return (
         <div>
             <div className="d-flex justify-content-center align-items-center" style={{ background: 'linear-gradient(to right, #222222, #111111)', height: '100vh' }} >
-                <div className="card p-4 rounded-circle-border shadow-lg" style={{ marginLeft: '4vh',marginRight: '4vh', width: "45vh" }}>
+                <div className="card p-4 rounded-circle-border shadow-lg" style={{ marginLeft: '4vh',marginRight: '4vh', width: "50vh" }}>
                     <h2 className="text-center mb-4" style={{ fontSize: '4vh' }}><b>Secure your notes </b></h2>
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
@@ -62,7 +62,7 @@ const Register = () => {
                         </div>
                         <div style={{ color: 'red', paddingBottom: '2vh' }}>{msg}</div>
                         <button type="submit" className="btn btn-outline-dark btn-block" style={{ width: '100%' }}>Register</button>
-                        <p style={{ fontSize: '1.75vh', paddingTop: '2.5vh' }}>Have an account ? <Link to='/register'>Login now</Link></p>
+                        <p style={{ fontSize: '1.75vh', paddingTop: '2.5vh' }}>Have an account ? <Link to='/login'>Login now</Link></p>
                     </form>
                 </div>
             </div>

@@ -1,86 +1,109 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react';
 import noteContext from '../context/notes/noteContext';
 import Noteitem from './Noteitem';
-import { useRef } from 'react';
 import AddNotes from './AddNotes';
 import { useNavigate } from 'react-router-dom';
 
-const Notes = (props) => {
+const Notes = () => {
     const context = useContext(noteContext);
-    let navigate = useNavigate();
-    const { notes, fetchnotes, editnote } = context;
+    const { notes, fetchnotes, editnote, deletenote } = context;
+    const [note, setNote] = useState({ edittitle: "", editdescription: "", edittag: "" });
+    const [showModal, setShowModal] = useState(false);
+    const navigate = useNavigate();
+    const [msg, setMsg] = useState('');
+
     useEffect(() => {
-        if (localStorage.getItem('token') === null) {
-            navigate('/login');
-        } else {
-            fetchnotes();
-        }
-    })
+        const fetchData = async () => {
+            if (!localStorage.getItem('token')) {
+                navigate('/login');
+            } else {
+                await fetchnotes(); // Wait for fetchnotes to complete
+            }
+        };
+
+        fetchData(); // Call the fetchData function
+        // eslint-disable-next-line
+    }, [fetchnotes]);
+
     const updateNote = (currentnote) => {
-        ref.current.click();
-        setNote({ id: currentnote._id, edittitle: currentnote.title, editdescription: currentnote.description, edittag: currentnote.tag });
+        setNote({
+            id: currentnote._id,
+            edittitle: currentnote.title,
+            editdescription: currentnote.description
+        });
+        setShowModal(true);
     }
-    const ref = useRef(null);
-    const refclose = useRef(null);
-    const { addnote } = context;
 
-    const [note, setNote] = useState({ edittitle: "", editdescription: "", edittag: "" })
+    const update = () => {
+        if (note.edittitle === "") {
+            setMsg("Title can't be empty")
+        }
+        else if (note.editdescription === "") {
+            setMsg("Description can't be empty")
+        }
+        else {
+            editnote(note.id, note.edittitle, note.editdescription);
+            setShowModal(false);
+        }
+    }
 
-    const update = (e) => {
-        addnote(note.title, note.description, note.tag);
-        editnote(note.id, note.edittitle, note.editdescription, note.edittag)
-        refclose.current.click();
+    const handleChange = (e) => {
+        setNote({
+            ...note,
+            [e.target.name]: e.target.value
+        });
     }
-    const change = (e) => {
-        setNote({ ...note, [e.target.name]: e.target.value })
-    }
+
     return (
-        <>
-            <div className="container" style={{marginTop: '15vh'}}>
-                <div className="card p-4 rounded-circle-border shadow-lg" style={{}}>
-                    <AddNotes/>
-                    <button ref={ref} type="button" style={{ display: 'none' }} className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        Launch demo modal
-                    </button>
+        <div className="container" style={{ marginTop: '15vh' }}>
+            <div className="card p-4 rounded-circle-border shadow-lg" style={{ marginLeft: '2vh', marginRight: '2vh' }}>
+                <AddNotes />
+            </div>
 
-                </div>
-                <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h1 className="modal-title" style={{fontWeight: 'bolder', fontSize: '4vh'}} id="exampleModalLabel">Edit note</h1>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            {showModal &&
+                <>
+                    <div className="modal-backdrop fade show"></div> {/* Add this overlay div */}
+                    <div className="modal-backdrop fade show"></div> {/* Add this overlay div */}
+                    <div className="modal fade show d-flex align-items-center justify-content-center" style={{ display: 'block' }} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div className="modal-dialog modal-dialog-centered" style={{ width: '90%' }}>
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h1 className="modal-title" style={{ fontWeight: 'bolder', fontSize: '4vh' }}>Edit note</h1>
+                                    <button type="button" className="btn-close" onClick={() => setShowModal(false)} aria-label="Close"></button>
+                                </div>
+                                <div className="modal-body">
+                                    <form>
+                                        <div className="mb-3">
+                                            <label htmlFor="edittitle" className="form-label">Title</label>
+                                            <input type="text" className="form-control" id="edittitle" name="edittitle" value={note.edittitle} onChange={handleChange} />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label htmlFor="editdescription" className="form-label">Description</label>
+                                            <input type="text" className="form-control" id="editdescription" name="editdescription" value={note.editdescription} onChange={handleChange} />
+                                        </div>
+                                    </form>
+                                </div>
+                                <div style={{ color: 'red', paddingBottom: '2vh' }}>{msg}</div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-dark" onClick={() => setShowModal(false)}>Close</button>
+                                    <button type="button" className="btn btn-outline-dark" onClick={update}>Update Note</button>
+                                </div>
                             </div>
-                            <div className="modal-body align-items-center">
-                                <form>
-                                    <div className="mb-3">
-                                        <label htmlFor="title" className="form-label">Title</label>
-                                        <input type="text" style={{border: '1px solid black'}} className="form-control" id="edittitle" name="edittitle" value={note.edittitle} onChange={change} />
-                                    </div>
-                                    <div className="mb-3">
-                                        <label htmlFor="description" className="form-label">Description</label>
-                                        <input type="text" className="form-control" style={{border: '1px solid black'}}  id="editdescription" value={note.editdescription} name="editdescription" onChange={change} />
-                                    </div>
-                                </form>
-                            </div>
-                            <div className="modal-footer">
-                                <button ref={refclose} type="button" className="btn btn-dark" data-bs-dismiss="modal">Close</button>
-                                <button onClick={update} type="button" className="btn btn-outline-dark" >Update Note</button>
-                            </div>
+                            
                         </div>
                     </div>
-                </div>
-                <div className='row'>
-                    <h1 style={{color: 'white', fontWeight: 'bolder', marginTop: '5vh', marginBottom: '2vh'}}>Your notes</h1>
-                    {(notes.length === 0) ? <p style={{color: 'white'}}>No notes yet! Add one now.</p> : null}
-                    {notes && notes.map((note) => {
-                        return <Noteitem key={note._id} updateNote={updateNote} note={note} />
-                    })}
-                </div>
+                </>
+            }
 
+            <div className='row' style={{ marginLeft: '0.75vh', marginRight: '0.75vh' }}>
+                <h1 style={{ color: 'white', fontWeight: 'bolder', marginTop: '5vh', marginBottom: '2vh' }}>Your notes</h1>
+                {(notes.length === 0) && <p style={{ color: 'white' }}>No notes yet! Add one now.</p>}
+                {notes.map(note => (
+                    <Noteitem key={note._id} note={note} updateNote={updateNote} deletenote={deletenote} />
+                ))}
             </div>
-        </>
-    )
+        </div>
+    );
 }
 
-export default Notes
+export default Notes;
