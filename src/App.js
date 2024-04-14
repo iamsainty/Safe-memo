@@ -28,6 +28,9 @@ function App() {
         window.location.to = '/mynotes';
       }
     }
+    else{
+      window.location.to='/'
+    }
   }, []);
 
   return (
@@ -47,7 +50,7 @@ function App() {
               localStorage.getItem('token') ? (
                 <Home/>
               ) : (
-                <LandingPage />
+                <Navigate to="/" />
               )
             } />
             {/* Add a check for authentication before rendering the Login and Register components */}

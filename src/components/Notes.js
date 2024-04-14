@@ -15,7 +15,7 @@ const Notes = () => {
     useEffect(() => {
         const fetchData = async () => {
             if (!localStorage.getItem('token')) {
-                navigate('/login');
+                navigate('/');
             } else {
                 await fetchnotes(); // Wait for fetchnotes to complete
             }

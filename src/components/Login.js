@@ -23,6 +23,10 @@ const Login = () => {
                 setMsg('Enter your password');
                 return ;
             }
+            if (credentials.password.length < 6) {
+                setMsg('Password should be at least 6 characters long.');
+                return;
+            }
             const response = await fetch("http://localhost:5001/api/auth/login", {
                 method: "POST",
                 headers: {
@@ -31,7 +35,6 @@ const Login = () => {
                 body: JSON.stringify({ username: credentials.username, password: credentials.password }),
             });
             const json = await response.json();
-            console.log(json);
             if (response.ok) {
                 localStorage.setItem('token', json.authtoken);
                 navigate('/mynotes');

@@ -9,17 +9,26 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const { name, username, password, cnfpassword } = credentials;
-
+    
         // Add form validation logic
         if (!name || !username || !password || !cnfpassword) {
             setMsg('All fields are required.');
+            return;
+        }
+        const pattern = /^[a-z0-9]+$/;
+        if (!pattern.test(credentials.username)) {
+            setMsg('Username should contain only lowercase alphabets and numbers');
+            return;
+        }
+        if (password.length < 6) {
+            setMsg('Password should be at least 6 characters long.');
             return;
         }
         if (password !== cnfpassword) {
             setMsg('Passwords do not match.');
             return;
         }
-
+    
         const response = await fetch("http://localhost:5001/api/auth/createuser", {
             method: "POST",
             headers: {
@@ -28,7 +37,6 @@ const Register = () => {
             body: JSON.stringify({ name, username, password }),
         });
         const json = await response.json();
-        console.log(json);
         if (json.success) {
             localStorage.setItem('token', json.authtoken);
             navigate('/mynotes');
@@ -37,6 +45,7 @@ const Register = () => {
             setMsg('Username already exists!');
         }
     };
+    
 
     const handleChange = (e) => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -45,7 +54,7 @@ const Register = () => {
     return (
         <div>
             <div className="d-flex justify-content-center align-items-center" style={{ background: 'linear-gradient(to right, #222222, #111111)', height: '100vh' }} >
-                <div className="card p-4 rounded-circle-border shadow-lg" style={{ marginLeft: '4vh',marginRight: '4vh', width: "50vh" }}>
+                <div className="card p-4 rounded-circle-border shadow-lg" style={{ marginLeft: '4vh', marginRight: '4vh', width: "50vh" }}>
                     <h2 className="text-center mb-4" style={{ fontSize: '4vh' }}><b>Secure your notes </b></h2>
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
