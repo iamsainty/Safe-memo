@@ -3,7 +3,7 @@ import NoteContext from "./noteContext";
 import { useNavigate } from "react-router-dom";
 
 const NoteState = (props) => {
-    const host = "http://localhost:5001";
+    const host = "https://secretscript.vercel.app";
     const navigate = useNavigate();
 
     const [notes, setNotes] = useState([]);

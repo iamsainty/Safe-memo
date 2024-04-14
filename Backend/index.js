@@ -8,7 +8,7 @@ const port = process.env.PORT || 5001; // Use process.env.PORT if available, els
 const cors = require('cors');
 
 const corsOptions = {
-    origin: '*',
+    origin: 'https://secretscript.web.app',
 };
 
 app.use(cors(corsOptions));
