@@ -9,9 +9,9 @@ const port = process.env.PORT || 5001;
 
 // CORS configuration
 const corsOptions = {
-    origin: 'https://secretscript.web.app', // Allow requests only from this origin
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow these HTTP methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers
+  origin: 'https://secretscript.web.app', // Allow requests only from this origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow these HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers
 };
 
 app.use(cors(corsOptions)); // Use cors middleware
