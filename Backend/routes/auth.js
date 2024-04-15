@@ -1,106 +1,139 @@
-const User=require('../models/User')
-const express=require('express');
-const router=express.Router();
-const {body, validationResult} = require('express-validator');
+const User = require('../models/User');
+const express = require('express');
+const router = express.Router();
+const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 const fetchuser = require('../middleware/fetchuser');
 
-const JWT_SECRET="hellosainty";
+const JWT_SECRET = "hellosainty";
 
-//creating new user
-router.post('/createuser',[
-    body('name', 'Enter a valid name').isLength({min: 1}),
-    body('username', 'Enter a valid username').isLength( { min: 1 }),
-    body('password', 'Enter a valid password').isLength({min: 5}), 
-],async (req, res)=>{
-    let success=false;
-    const errors=validationResult(req);
-    if(!errors.isEmpty()){
-        return res.status(400).json({success, errors: errors.array()})
+// Creating new user
+router.options('/createuser', (req, res) => {
+    // Set CORS headers in the response
+    res.setHeader('Access-Control-Allow-Origin', 'https://secretscript.web.app');
+    res.setHeader('Access-Control-Allow-Methods', 'POST');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.sendStatus(200);
+});
+
+router.post('/createuser', [
+    body('name', 'Enter a valid name').isLength({ min: 1 }),
+    body('username', 'Enter a valid username').isLength({ min: 1 }),
+    body('password', 'Enter a valid password').isLength({ min: 5 }),
+], async (req, res) => {
+    let success = false;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ success, errors: errors.array() });
     }
     try {
-        let user= await User.findOne({username: req.body.username});
-        if(user){
-            return res.status(400).json({ success, error: "Username already exists" })
+        let user = await User.findOne({ username: req.body.username });
+        if (user) {
+            return res.status(400).json({ success, error: "Username already exists" });
         }
 
-        const salt=await bcrypt.genSalt(10);
-        const secpass=await bcrypt.hash(req.body.password, salt)
-        user=await User.create({
+        const salt = await bcrypt.genSalt(10);
+        const secpass = await bcrypt.hash(req.body.password, salt);
+        user = await User.create({
             name: req.body.name,
             username: req.body.username,
             password: secpass
-        })
+        });
 
-        const data={
+        const data = {
             user: {
-                id:user.id
+                id: user.id
             }
-        }
+        };
 
-        const authtoken=jwt.sign(data, JWT_SECRET)
-        console.log(authtoken)
-        success=true;
-        res.json({success, authtoken})
+        const authtoken = jwt.sign(data, JWT_SECRET);
+        success = true;
+        // Set CORS headers in the response
+        res.setHeader('Access-Control-Allow-Origin', 'https://secretscript.web.app');
+        res.setHeader('Access-Control-Allow-Methods', 'POST');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+        res.json({ success, authtoken });
     } catch (error) {
         console.error(error.message);
         res.status(500).send("Some Error occured");
     }
-})
+});
 
 
-//login a user 
-router.post('/login',[
-    body('username', 'Enter a valid username').isLength({min: 1}),
-    body('password', 'Enter a valid password').isLength({min: 5}), 
-],async (req, res)=>{
-    let success=false;
-    const errors=validationResult(req);
-    if(!errors.isEmpty()){
-        return res.status(400).json({errors: errors.array()})
+// Login a user 
+router.options('/login', (req, res) => {
+    // Set CORS headers in the response
+    res.setHeader('Access-Control-Allow-Origin', 'https://secretscript.web.app');
+    res.setHeader('Access-Control-Allow-Methods', 'POST');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.sendStatus(200);
+});
+
+router.post('/login', [
+    body('username', 'Enter a valid username').isLength({ min: 1 }),
+    body('password', 'Enter a valid password').isLength({ min: 5 }),
+], async (req, res) => {
+    let success = false;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
     }
 
-    const {username, password} = req.body;
+    const { username, password } = req.body;
 
     try {
-        let user=await User.findOne({username});
-        if(!user){
-            return res.status(400).json({success, error: "username does not exist"})
+        let user = await User.findOne({ username });
+        if (!user) {
+            return res.status(400).json({ success, error: "username does not exist" });
         }
 
-        const checkpass=await bcrypt.compare(password, user.password);
-        if(!checkpass){
-            return res.status(400).json({success, error: "Password did not matched"})
+        const checkpass = await bcrypt.compare(password, user.password);
+        if (!checkpass) {
+            return res.status(400).json({ success, error: "Password did not match" });
         }
 
-
-        const data={
+        const data = {
             user: {
-                id:user.id
+                id: user.id
             }
-        }
+        };
 
-        const authtoken=jwt.sign(data, JWT_SECRET)
-        success=true;
-        res.send({success, authtoken})
+        const authtoken = jwt.sign(data, JWT_SECRET);
+        success = true;
+        // Set CORS headers in the response
+        res.setHeader('Access-Control-Allow-Origin', 'https://secretscript.web.app');
+        res.setHeader('Access-Control-Allow-Methods', 'POST');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+        res.send({ success, authtoken });
     } catch (error) {
         console.error(error.message);
         res.status(500).send("Some Error occured");
     }
-})
+});
 
-//get user details
-router.post('/getuser', fetchuser, async (req, res)=>{
+// Get user details
+router.options('/getuser', (req, res) => {
+    // Set CORS headers in the response
+    res.setHeader('Access-Control-Allow-Origin', 'https://secretscript.web.app');
+    res.setHeader('Access-Control-Allow-Methods', 'POST');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.sendStatus(200);
+});
+
+router.post('/getuser', fetchuser, async (req, res) => {
     try {
-        const userid=req.user.id;
-        const user= await User.findById(userid).select("-password")
-        res.send(user)
+        const userid = req.user.id;
+        const user = await User.findById(userid).select("-password");
+        // Set CORS headers in the response
+        res.setHeader('Access-Control-Allow-Origin', 'https://secretscript.web.app');
+        res.setHeader('Access-Control-Allow-Methods', 'POST');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+        res.send(user);
     } catch (error) {
         console.error(error.message);
         res.status(500).send("Some Error occured");
     }
-})
+});
 
-
-module.exports=(router)
+module.exports = router;
