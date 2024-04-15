@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
-var jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const fetchuser = require('../middleware/fetchuser');
 const cors = require('cors');
 
@@ -37,11 +37,11 @@ router.post('/createuser', cors(corsOptions), [
         }
 
         const salt = await bcrypt.genSalt(10);
-        const secpass = await bcrypt.hash(req.body.password, salt);
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
         user = await User.create({
             name: req.body.name,
             username: req.body.username,
-            password: secpass
+            password: hashedPassword
         });
 
         const data = {
@@ -55,7 +55,7 @@ router.post('/createuser', cors(corsOptions), [
         res.json({ success, authtoken });
     } catch (error) {
         console.error(error.message);
-        res.status(500).send("Some Error occured");
+        res.status(500).send("Some Error occurred");
     }
 });
 
@@ -75,11 +75,11 @@ router.post('/login', cors(corsOptions), [
     try {
         let user = await User.findOne({ username });
         if (!user) {
-            return res.status(400).json({ success, error: "username does not exist" });
+            return res.status(400).json({ success, error: "Username does not exist" });
         }
 
-        const checkpass = await bcrypt.compare(password, user.password);
-        if (!checkpass) {
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        if (!isPasswordMatch) {
             return res.status(400).json({ success, error: "Password did not match" });
         }
 
@@ -94,7 +94,7 @@ router.post('/login', cors(corsOptions), [
         res.send({ success, authtoken });
     } catch (error) {
         console.error(error.message);
-        res.status(500).send("Some Error occured");
+        res.status(500).send("Some Error occurred");
     }
 });
 
@@ -106,7 +106,7 @@ router.post('/getuser', cors(corsOptions), fetchuser, async (req, res) => {
         res.send(user);
     } catch (error) {
         console.error(error.message);
-        res.status(500).send("Some Error occured");
+        res.status(500).send("Some Error occurred");
     }
 });
 
