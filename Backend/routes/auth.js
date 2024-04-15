@@ -11,7 +11,7 @@ const JWT_SECRET = "hellosainty";
 
 // CORS configuration
 const corsOptions = {
-    origin: 'https://secretscript.web.app', // Allow requests only from this origin
+    origin: 'https://secret-script-eight.vercel.app', // Allow requests only from this origin
     methods: ['POST'], // Allow POST requests
     allowedHeaders: ['Content-Type'], // Allow Content-Type header
 };
@@ -55,7 +55,7 @@ router.post('/createuser', [
 
         const authtoken = jwt.sign(data, JWT_SECRET);
         success = true;
-        res.header("Access-Control-Allow-Origin", "https://secretscript.web.app");
+        res.header("Access-Control-Allow-Origin", "https://secret-script-eight.vercel.app");
         res.json({ success, authtoken });
     } catch (error) {
         console.error(error.message);
