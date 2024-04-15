@@ -5,19 +5,22 @@ const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 const fetchuser = require('../middleware/fetchuser');
+const cors = require('cors');
 
 const JWT_SECRET = "hellosainty";
 
-// Creating new user
-router.options('/createuser', (req, res) => {
-    // Set CORS headers in the response
-    res.setHeader('Access-Control-Allow-Origin', 'https://secretscript.web.app');
-    res.setHeader('Access-Control-Allow-Methods', 'POST');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    res.sendStatus(200);
-});
+// CORS configuration
+const corsOptions = {
+    origin: 'https://secretscript.web.app', // Allow requests only from this origin
+    methods: ['POST'], // Allow POST requests
+    allowedHeaders: ['Content-Type'], // Allow Content-Type header
+};
 
-router.post('/createuser', [
+// Handle preflight requests
+router.options('*', cors(corsOptions));
+
+// Creating new user
+router.post('/createuser', cors(corsOptions), [
     body('name', 'Enter a valid name').isLength({ min: 1 }),
     body('username', 'Enter a valid username').isLength({ min: 1 }),
     body('password', 'Enter a valid password').isLength({ min: 5 }),
@@ -49,10 +52,6 @@ router.post('/createuser', [
 
         const authtoken = jwt.sign(data, JWT_SECRET);
         success = true;
-        // Set CORS headers in the response
-        res.setHeader('Access-Control-Allow-Origin', 'https://secretscript.web.app');
-        res.setHeader('Access-Control-Allow-Methods', 'POST');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
         res.json({ success, authtoken });
     } catch (error) {
         console.error(error.message);
@@ -60,17 +59,8 @@ router.post('/createuser', [
     }
 });
 
-
 // Login a user 
-router.options('/login', (req, res) => {
-    // Set CORS headers in the response
-    res.setHeader('Access-Control-Allow-Origin', 'https://secretscript.web.app');
-    res.setHeader('Access-Control-Allow-Methods', 'POST');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    res.sendStatus(200);
-});
-
-router.post('/login', [
+router.post('/login', cors(corsOptions), [
     body('username', 'Enter a valid username').isLength({ min: 1 }),
     body('password', 'Enter a valid password').isLength({ min: 5 }),
 ], async (req, res) => {
@@ -101,10 +91,6 @@ router.post('/login', [
 
         const authtoken = jwt.sign(data, JWT_SECRET);
         success = true;
-        // Set CORS headers in the response
-        res.setHeader('Access-Control-Allow-Origin', 'https://secretscript.web.app');
-        res.setHeader('Access-Control-Allow-Methods', 'POST');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
         res.send({ success, authtoken });
     } catch (error) {
         console.error(error.message);
@@ -113,22 +99,10 @@ router.post('/login', [
 });
 
 // Get user details
-router.options('/getuser', (req, res) => {
-    // Set CORS headers in the response
-    res.setHeader('Access-Control-Allow-Origin', 'https://secretscript.web.app');
-    res.setHeader('Access-Control-Allow-Methods', 'POST');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    res.sendStatus(200);
-});
-
-router.post('/getuser', fetchuser, async (req, res) => {
+router.post('/getuser', cors(corsOptions), fetchuser, async (req, res) => {
     try {
         const userid = req.user.id;
         const user = await User.findById(userid).select("-password");
-        // Set CORS headers in the response
-        res.setHeader('Access-Control-Allow-Origin', 'https://secretscript.web.app');
-        res.setHeader('Access-Control-Allow-Methods', 'POST');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
         res.send(user);
     } catch (error) {
         console.error(error.message);
