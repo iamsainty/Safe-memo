@@ -29,7 +29,7 @@ const Register = () => {
         }
 
         try {
-            const response = await fetch("https://secretscript.vercel.app/api/auth/createuser", {
+            const response = await fetch("https://safe-memo.vercel.app/api/auth/createuser", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

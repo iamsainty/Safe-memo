@@ -21,7 +21,7 @@ const Login = () => {
                 setMsg('Password should be at least 6 characters long.');
                 return;
             }
-            const response = await fetch("https://secretscript.vercel.app/api/auth/login", {
+            const response = await fetch("https://safe-memo.vercel.app/api/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
