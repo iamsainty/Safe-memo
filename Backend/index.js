@@ -9,7 +9,7 @@ const port = process.env.PORT || 5001;
 
 // CORS configuration
 const corsOptions = {
-  origin: 'https://secret-script-eight.vercel.app', // Allow requests only from this origin
+  origin: 'https://safe-memo.web.app', // Allow requests only from this origin
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow these HTTP methods
   allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers
 };
