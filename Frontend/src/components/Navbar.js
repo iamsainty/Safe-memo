@@ -11,7 +11,7 @@ const Navbar = () => {
     <div>
       <nav className="navbar fixed-top navbar-expand-lg bg-body-tertiary bg-dark" data-bs-theme="dark">
         <div className="container-fluid">
-          <Link className="navbar-brand" to="/"><b style={{fontWeight: 'bolder', paddingLeft: '3vh'}}>Secret Script</b></Link >
+          <Link className="navbar-brand" to="/"><b style={{fontWeight: 'bolder', paddingLeft: '3vh'}}>Safe Memo</b></Link >
             <form className="d-flex" role="search">
               {localStorage.getItem('token') !== null ? (
                 <div>
