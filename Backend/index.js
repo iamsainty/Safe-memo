@@ -14,6 +14,9 @@ const authRouter = require('./routes/auth');
 const notesRouter = require('./routes/notes');
 
 // Routes
+app.use('/', (req, res)=>{
+  res.json( {message: "Welcome to the Notes API"} );
+});
 app.use('/api/auth', authRouter);
 app.use('/api/notes', notesRouter);
 
