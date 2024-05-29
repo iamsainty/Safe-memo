@@ -5,7 +5,3 @@
 .env.development.local
 .env.test.local
 .env.production.local
-
-.vercel
-
-/backend/node_modules/
