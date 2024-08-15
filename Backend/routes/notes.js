@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router()
 const fetchuser = require('../middleware/fetchuser');
 const Notes = require('../models/Notes');
-const { body, validationResult } = require('express-validator');
 const Note = require('../models/Notes');
 
 
@@ -21,16 +20,9 @@ router.get('/fetchnotes', fetchuser, async (req, res) => {
 
 
 //adding notes
-router.post('/addnote', fetchuser, [
-    body('title', "Title can't be empty").isLength({ min: 1 }),
-    body('description', "Description can't be empty").isLength({ min: 1 })
-], async (req, res) => {
+router.post('/addnote', fetchuser, async (req, res) => {
     try {
         const { title, description, tag } = req.body;
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() })
-        }
         const note = new Note({
             title, description, tag, user: req.user.id
         })

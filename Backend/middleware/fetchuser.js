@@ -3,7 +3,7 @@ const JWT_SECRET="hellosainty";
 
 
 const fetchuser=(req, res, next)=>{
-    const token=req.header('auth-token')
+    const token=req.header('authtoken')
     if(!token){
         return res.status(401).send({error: "Enter a valid token"})
     }
