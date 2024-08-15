@@ -3,7 +3,9 @@ import NoteContext from "./noteContext";
 import { useNavigate } from "react-router-dom";
 
 const NoteState = (props) => {
-    const host = "https://safe-memo.vercel.app";
+    // const host = "http://localhost:5001";
+    const host = 'https://safe-memo.vercel.app'
+
     const navigate = useNavigate();
 
     const [notes, setNotes] = useState([]);
@@ -11,7 +13,7 @@ const NoteState = (props) => {
     const [fetchComplete, setFetchComplete] = useState(false); // Flag to track if fetchnotes has completed
 
     const fetchnotes = async () => {
-        if (!localStorage.getItem('token')) {
+        if (!localStorage.getItem('safe-memo-token')) {
             navigate('/login');
         } else {
             try {
@@ -20,7 +22,7 @@ const NoteState = (props) => {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
-                        "auth-token": localStorage.getItem("token")
+                        "authtoken": localStorage.getItem("safe-memo-token")
                     },
                 });
                 const allnotes = await response.json();
@@ -46,7 +48,7 @@ const NoteState = (props) => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "auth-token": localStorage.getItem("token")  
+                    "authtoken": localStorage.getItem("safe-memo-token")
                 },
                 body: JSON.stringify({ title, description, tag }),
             });
@@ -64,7 +66,7 @@ const NoteState = (props) => {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
-                    "auth-token": localStorage.getItem("token")  
+                    "authtoken": localStorage.getItem("safe-memo-token")
                 },
             });
             setNotes(notes.filter(note => note._id !== id));
@@ -80,7 +82,7 @@ const NoteState = (props) => {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
-                    "auth-token": localStorage.getItem("token")  
+                    "authtoken": localStorage.getItem("safe-memo-token")
                 },
                 body: JSON.stringify({ title, description, tag }),
             });

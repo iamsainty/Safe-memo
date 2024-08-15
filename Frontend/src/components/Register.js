@@ -6,6 +6,8 @@ const Register = () => {
     const [msg, setMsg] = useState('');
     const navigate = useNavigate();
 
+    const host = 'https://safe-memo.vercel.app'
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const { name, username, password, cnfpassword } = credentials;
@@ -29,7 +31,7 @@ const Register = () => {
         }
 
         try {
-            const response = await fetch("https://safe-memo.vercel.app/api/auth/createuser", {
+            const response = await fetch(`${host}/api/auth/createuser`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -38,7 +40,7 @@ const Register = () => {
             });
             const json = await response.json();
             if (json.success) {
-                localStorage.setItem('token', json.authtoken);
+                localStorage.setItem('safe-memo-token', json.authtoken);
                 navigate('/mynotes');
                 window.location.reload();
             } else {

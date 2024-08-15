@@ -1,11 +1,13 @@
 import React from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const LandingPage = () => {
-    if (!localStorage.getItem('token')) {
-        Navigate('/');
+
+    const navigate = useNavigate();
+    if (!localStorage.getItem('safe-memo-token')) {
+        navigate('/');
     } else {
-        Navigate('/mynotes')
+        navigate('/mynotes')
     }
     return (
         <div className='container d-flex flex-column justify-content-center align-items-center' style={{ height: '100vh' }}>

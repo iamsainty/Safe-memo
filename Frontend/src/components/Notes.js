@@ -14,7 +14,7 @@ const Notes = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!localStorage.getItem('token')) {
+            if (!localStorage.getItem('safe-memo-token')) {
                 navigate('/');
             } else {
                 await fetchnotes(); // Wait for fetchnotes to complete

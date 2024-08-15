@@ -20,7 +20,7 @@ function App() {
 
   useEffect(() => {
     // Check if user is authenticated
-    const authToken = localStorage.getItem('token');
+    const authToken = localStorage.getItem('safe-memo-token');
     if (authToken) {
       // User is authenticated, redirect to /mynotes if they try to access /login, /register, or /
       const currentPath = window.location.pathname;
@@ -40,14 +40,14 @@ function App() {
         <NoteState>
           <Routes>
             <Route exact path="/" element={
-              localStorage.getItem('token') ? (
+              localStorage.getItem('safe-memo-token') ? (
                 <Navigate to="/mynotes" />
               ) : (
                 <LandingPage />
               )
             } />
             <Route exact path="/mynotes" element={
-              localStorage.getItem('token') ? (
+              localStorage.getItem('safe-memo-token') ? (
                 <Home/>
               ) : (
                 <Navigate to="/" />
@@ -58,7 +58,7 @@ function App() {
               exact
               path="/login"
               element={
-                localStorage.getItem('token') ? (
+                localStorage.getItem('safe-memo-token') ? (
                   <Navigate to="/mynotes" />
                 ) : (
                   <Login />
@@ -69,7 +69,7 @@ function App() {
               exact
               path="/register"
               element={
-                localStorage.getItem('token') ? (
+                localStorage.getItem('safe-memo-token') ? (
                   <Navigate to="/mynotes" />
                 ) : (
                   <Register />
