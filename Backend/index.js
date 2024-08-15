@@ -14,11 +14,11 @@ const authRouter = require('./routes/auth');
 const notesRouter = require('./routes/notes');
 
 // Routes
+app.use('/api/auth', authRouter);
+app.use('/api/notes', notesRouter);
 app.use('/', (req, res)=>{
   res.json( {message: "Welcome to the Notes API"} );
 });
-app.use('/api/auth', authRouter);
-app.use('/api/notes', notesRouter);
 
 // Start the server
 app.listen(port, () => {
